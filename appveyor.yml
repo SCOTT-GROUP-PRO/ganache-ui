@@ -14,15 +14,15 @@ cache:
 
 environment:
   CERT_ENCRYPTION_KEY:
-    secure: +XDEI8knAE1BjGyX5zGCR+4X1gQQjOmCL+nASqdAj8PJeRuO/nWA2hk9pzYzO4ejdRQZBbOz0wN+c6gTm9KSS2i9BaZVieuIPF6vlCgcYhE=
+    secure: 7uEZag5XlmDFGRCYGbD1aZGLtvRns4RA5RDQwle8ZnJ2tLnu95936wovBQt98STwx55Xl6XpTF3oR9RHahPpYRrBJ6XcV9lFmKBvRDqeYGY=
   CERT_ENCRYPTION_SALT:
-    secure: IFHYfftML5rlXn+KPvgm6dUgqwwougOEcU3ocXtPTDO0R83vszq52TFyBWsxMu0P2DJaqgLczmM5jYsdfydF0w==
+    secure: 3nS78UzPBt64VWYzP7JKyrRdzxW0AzhCnxcbLQIPUn6s/2Wg60q6ozAicrx0lGC7svAdQFqaCnNIehBGXtVmjQ==
   CERT_PRIVATE_KEY_PASSWORD:
     secure: Xi+zjxXImbLqIbAM4Xcnb4Ae+MzUDC6mD9sAje81pGg=
   GH_TOKEN:
     secure: S+Bnfbb+uco7s2X3jqmfP3vwxLIIZTmNmT0f8y982PaiUQB1AW8YNN7Acpi0JQOi
   matrix:
-    - nodejs_version: 12.13.1
+    - nodejs_version: 14.21.1
 
 install:
   - ps: $env:package_version = (Get-Content -Raw -Path package.json | ConvertFrom-Json).version 
@@ -37,6 +37,8 @@ install:
           Remove-Item Env:/CERT_PRIVATE_KEY_PASSWORD;
         }
   - ps: Update-NodeJsInstallation $env:nodejs_version x64
+  # Apply workaround for git:// packages
+  - git config --global url."https://github.com/".insteadOf ssh://git@github.com/
   - set CI=true
   - npm install -g npm@latest
   - set PATH=%APPDATA%\npm;%PATH%
